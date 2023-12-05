@@ -1,0 +1,2 @@
+adafruit-circuitpython-requests==2.0.2
+adafruit-circuitpython-pm25==2.1.15
