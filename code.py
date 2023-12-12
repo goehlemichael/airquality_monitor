@@ -11,57 +11,56 @@ from digitalio import DigitalInOut, Direction, Pull
 from adafruit_pm25.i2c import PM25_I2C
 import microcontroller
 
-
 SEND_DATA_PERIOD = 30
 ADAFRUIT_API_URL = "https://io.adafruit.com"
 PM10_STANDARD_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                   os.getenv("AIO_USERNAME"),
-                                                   os.getenv("PM10_STANDARD_FEED_NAME")
-                                                   )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PM10_STANDARD_FEED_NAME")
+                                                             )
 PM25_STANDARD_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                    os.getenv("AIO_USERNAME"),
-                                                    os.getenv("PM25_STANDARD_FEED_NAME")
-                                                    )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PM25_STANDARD_FEED_NAME")
+                                                             )
 PM100_STANDARD_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                       os.getenv("AIO_USERNAME"),
-                                                       os.getenv("PM100_STANDARD_FEED_NAME")
-                                                       )
+                                                              os.getenv("AIO_USERNAME"),
+                                                              os.getenv("PM100_STANDARD_FEED_NAME")
+                                                              )
 PM10_ENV_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                   os.getenv("AIO_USERNAME"),
-                                                   os.getenv("PM10_ENV_FEED_NAME")
-                                                   )
+                                                        os.getenv("AIO_USERNAME"),
+                                                        os.getenv("PM10_ENV_FEED_NAME")
+                                                        )
 PM25_ENV_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                    os.getenv("AIO_USERNAME"),
-                                                    os.getenv("PM25_ENV_FEED_NAME")
-                                                    )
+                                                        os.getenv("AIO_USERNAME"),
+                                                        os.getenv("PM25_ENV_FEED_NAME")
+                                                        )
 PM100_ENV_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                       os.getenv("AIO_USERNAME"),
-                                                       os.getenv("PM100_ENV_FEED_NAME")
-                                                       )
+                                                         os.getenv("AIO_USERNAME"),
+                                                         os.getenv("PM100_ENV_FEED_NAME")
+                                                         )
 PARTICLES03UM_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                   os.getenv("AIO_USERNAME"),
-                                                   os.getenv("PARTICLES03UM_FEED_NAME")
-                                                   )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PARTICLES03UM_FEED_NAME")
+                                                             )
 PARTICLES05UM_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                    os.getenv("AIO_USERNAME"),
-                                                    os.getenv("PARTICLES05UM_FEED_NAME")
-                                                    )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PARTICLES05UM_FEED_NAME")
+                                                             )
 PARTICLES10UM_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                       os.getenv("AIO_USERNAME"),
-                                                       os.getenv("PARTICLES10UM_FEED_NAME")
-                                                       )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PARTICLES10UM_FEED_NAME")
+                                                             )
 PARTICLES25UM_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                    os.getenv("AIO_USERNAME"),
-                                                    os.getenv("PARTICLES25UM_FEED_NAME")
-                                                    )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PARTICLES25UM_FEED_NAME")
+                                                             )
 PARTICLES50UM_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                       os.getenv("AIO_USERNAME"),
-                                                       os.getenv("PARTICLES50UM_FEED_NAME")
-                                                       )
+                                                             os.getenv("AIO_USERNAME"),
+                                                             os.getenv("PARTICLES50UM_FEED_NAME")
+                                                             )
 PARTICLES100UM_FEED_URL = "{}/api/v2/{}/feeds/{}/data".format(ADAFRUIT_API_URL,
-                                                       os.getenv("AIO_USERNAME"),
-                                                       os.getenv("PARTICLES100UM_FEED_NAME")
-                                                       )
+                                                              os.getenv("AIO_USERNAME"),
+                                                              os.getenv("PARTICLES100UM_FEED_NAME")
+                                                              )
 
 i2c = busio.I2C(board.SCL, board.SDA, frequency=100000)
 reset_pin = None
@@ -105,6 +104,7 @@ def send_sensor_data(sensor_data_point, feed_location):
     except adafruit_requests.RequestError as error:
         print("Request error occurred:", str(error))
         print("Skipping request.")
+
 
 print("Found PM2.5 sensor, reading data...")
 while True:
@@ -156,8 +156,6 @@ while True:
         print("Particles > 10 um / 0.1L air:", aqdata["particles 100um"])
         print("---------------------------------------")
         time.sleep(SEND_DATA_PERIOD)
-
-    except RuntimeError:
-        print("Unable to read from sensor, retrying...")
-        continue
-
+    except Exception as e:
+        print("An error occurred:", str(e))
+        microcontroller.reset()
